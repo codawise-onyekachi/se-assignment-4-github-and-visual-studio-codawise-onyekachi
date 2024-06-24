@@ -189,31 +189,36 @@ Documentation Generation: Automatically generate documentation from code comment
 
 Example of a simple CI/CD pipeline using GitHub Actions:
 
-name: Windows CI/CD
+name: CI/CD Pipeline
 
-on: [push]
+on:
+  push:
+    branches: [ main ]  # Runs on pushes to the main branch
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest  # This job runs on a virtual Ubuntu machine
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js version
+      - uses: actions/checkout@v3  # Checks out the code from the repository
+      - name: Use Node.js 16  # Uses a specific Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-      - run: npm ci
-      - run: npm test
-      - name: Create Windows release
-        if: success()
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: false
-          files: dist/*.exe
-          name: Release ${{ github.run_number }}
-          # Replace 'your-token' with your GitHub token
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: v${{ github.run_number }}
+          node-version: 16
+      - name: Install dependencies
+        run: npm install  # Installs project dependencies
+
+      - name: Run tests
+        run: npm test  # Runs the project's tests
+
+      - name: Deploy to production (replace with your deployment action)  # Placeholder for deployment step
+        env:
+          PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}  # Access secrets from GitHub Actions secrets
+        # Replace with the actual deployment commands or use a deployment action from the marketplace (e.g., aws-actions/aws-ecr-deploy)
+        run: echo "** Deploying to production... (replace with actual deployment steps)**"
+
+
+
 
 
 7. Introduction to Visual Studio:
